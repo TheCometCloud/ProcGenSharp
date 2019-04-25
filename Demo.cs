@@ -2,7 +2,7 @@
 
 namespace ProcGenSharp
 {
-    class Program
+    class Demo
     {
         static void Main(string[] args)
         {
