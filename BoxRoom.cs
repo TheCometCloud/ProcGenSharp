@@ -6,13 +6,11 @@ namespace ProcGenSharp
 {
     public class BoxRoom : Room
     {
-        public bool isDirty;
-
         public int Height {get; private set;}
         public int Width {get; private set;}
         public Tile TopLeft {get; private set;}
 
-        // 
+        // Room failed to be created due to the SourceException.
         public class FailedRoomInitException : Exception 
         {
             public Exception SourceException {get;}

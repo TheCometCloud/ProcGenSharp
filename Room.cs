@@ -53,7 +53,10 @@ namespace ProcGenSharp
         // Returns a list of Points that border the room.
         public virtual List<Tile> GetPerimeter()
         {
+            // Output storage
             List<Tile> perimeterPoints = new List<Tile>();
+
+            // Loop through all neighbors of the point
             TraverseWith( (x, y) =>
             {
                 for (int i = y - 1; i < y + 2; i++)
@@ -75,12 +78,14 @@ namespace ProcGenSharp
         // Draws the room to the parent grid.
         public void DrawToParentGrid()
         {
+            // Can't draw to parent map if it doesn't exist
             if (ParentMap == null)
                 return;
 
             List<Tile> perimeter = GetPerimeter();
             List<Tile> drawList = new List<Tile>();
 
+            // Assign characters and add them to the drawlist.
             TraverseWith( (x, y) =>
             {
                 Tile temp = new Tile(x, y);
@@ -97,6 +102,7 @@ namespace ProcGenSharp
                 drawList.Add(temp);
             });
 
+            // Make respective changes to the grid
             foreach (Tile tile in drawList)
             {
                 ParentMap.Grid[tile.y, tile.x] = tile.value;

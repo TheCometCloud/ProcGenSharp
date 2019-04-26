@@ -17,8 +17,8 @@ namespace ProcGenSharp
         public char Empty = '.';
         public char Wall = '#';
 
+        // Dimension getters
         public int Height { get { return Grid.GetLength(0); } }
-
         public int Width { get { return Grid.GetLength(1); } }
 
         // Parameterized Constructor
@@ -52,6 +52,7 @@ namespace ProcGenSharp
         }
 
         // Traverses a smaller region of the gird, calls innerAction on each point, and outerAction at the end of each row.
+        // Throws an IndexOutOfRangeException.
         public void SubTraverseWith(int x1, int x2, int y1, int y2, Action<int, int> innerAction, Action<int> outerAction = null)
         {
             try 
@@ -70,6 +71,12 @@ namespace ProcGenSharp
             {
                 throw ex;
             }
+        }
+
+        // Tile based subtraversal.
+        public void SubTraverseWith(Tile topLeft, Tile bottomRight, Action<int, int> innerAction, Action<int> outerAction = null)
+        {
+            SubTraverseWith(topLeft.x, bottomRight.x, topLeft.y, bottomRight.y, innerAction, outerAction);
         }
 
         // String represenation of the class.
