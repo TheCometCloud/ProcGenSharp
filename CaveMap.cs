@@ -29,6 +29,9 @@ namespace ProcGenSharp
                 // Transfer the Development Grid to the Actual Grid
                 TraverseWith((x, y) => {Grid[y, x] = DevelopGrid[y, x];});
             }
+
+            // Close off the edges of the map
+            WallGrid();
         }
 
         // Develops a point via the cellular automata pattern

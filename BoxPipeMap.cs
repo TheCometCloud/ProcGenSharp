@@ -23,7 +23,7 @@ namespace ProcGenSharp
                     Room newRoom;
                     try
                     {
-                        newRoom = new BoxRoom(this, 5, 5, new Tile(x, y, Grid[y, x]));
+                        newRoom = new BoxRoom(this, Rng.Next(10) + 1, Rng.Next(10) + 1, new Tile(x, y, Grid[y, x]));
                     }
                     catch(BoxRoom.FailedRoomInitException ex)
                     {

@@ -38,12 +38,24 @@ namespace ProcGenSharp
             TraverseWith((x, y) => {Grid[x, y] = c;});
         }
 
+        public void WallGrid()
+        {
+            for (int i = 1; i < Height - 1; i++)
+            {
+                for (int j = 1; j < Width - 1; j++)
+                {
+                    if (i == 1 || j == 1 || i == Height - 2|| j == Width - 2)
+                        Grid[j, i] = Wall;
+                }
+            }
+        }
+
         // Loops through the grid, calls innerAction on each point, and outerAction at the end of each row. 
         public void TraverseWith(Action<int, int> innerAction, Action<int> outerAction = null)
         {
-            for (int i = 1; i < Grid.GetLength(0) -1; i++)
+            for (int i = 1; i < Height -1; i++)
             {
-                for (int j = 1; j < Grid.GetLength(1) - 1; j++)
+                for (int j = 1; j < Width - 1; j++)
                     innerAction(j, i);
 
                 if (outerAction != null)
