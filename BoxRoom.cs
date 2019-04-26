@@ -53,6 +53,7 @@ namespace ProcGenSharp
         {
             List<Tile> perimeterPoints = new List<Tile>();
         
+            // Add tile to the perimeter if one of its dimensions are part of the edge.-
             TraverseWith( (x, y) =>
             {
                 if (x == TopLeft.x || y == TopLeft.y|| x == TopLeft.x + Width - 1 || y == TopLeft.y + Height - 1)

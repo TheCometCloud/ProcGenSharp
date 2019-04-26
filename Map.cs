@@ -12,21 +12,14 @@ namespace ProcGenSharp
         protected Random Rng;
         public char?[,] Grid{get; set;}
 
-        public int Height
-        {
-            get
-            {
-                return Grid.GetLength(0);
-            }
-        }
+        // Default representers
+        public char Unknown = '?';
+        public char Empty = '.';
+        public char Wall = '#';
 
-        public int Width
-        {
-            get
-            {
-                return Grid.GetLength(1);
-            }
-        }
+        public int Height { get { return Grid.GetLength(0); } }
+
+        public int Width { get { return Grid.GetLength(1); } }
 
         // Parameterized Constructor
         public Map(int height, int width)

@@ -2,11 +2,11 @@ namespace ProcGenSharp
 {
     public struct Tile
     {
-        public int x;
-        public int y;
+        public int x { get; private set; }
+        public int y { get; private set; }
         public char? value;
 
-        public Tile(int x, int y, char? value = null)
+        public Tile(int x, int y, char? value = '?')
         {
             this.x = x;
             this.y = y;

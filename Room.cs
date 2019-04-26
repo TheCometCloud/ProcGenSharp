@@ -12,6 +12,9 @@ namespace ProcGenSharp
         public List<Tile> Points;
         public Map ParentMap;
 
+        public char Wall = '#';
+        public char Floor = '.';
+
         // No-Arg Constructor
         public Room()
         {
@@ -84,11 +87,11 @@ namespace ProcGenSharp
 
                 if (perimeter.Contains(temp))
                 {
-                    temp.value = '#';
+                    temp.value = Wall;
                 }
                 else
                 {
-                    temp.value = '.';
+                    temp.value = Floor;
                 }
 
                 drawList.Add(temp);
