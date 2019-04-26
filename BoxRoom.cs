@@ -13,7 +13,15 @@ namespace ProcGenSharp
         public Tile TopLeft {get; private set;}
 
         // 
-        public class FailedRoomInitException : Exception {};
+        public class FailedRoomInitException : Exception 
+        {
+            public Exception SourceException {get;}
+
+            public FailedRoomInitException(Exception ex) : base()
+            {
+                SourceException = ex;
+            }
+        }
 
         // Parameterized Constructor
         public BoxRoom (Map parentMap, int height, int width, Tile topLeft)
@@ -34,7 +42,7 @@ namespace ProcGenSharp
                     }
                     catch (IndexOutOfRangeException ex)
                     {
-                        throw new FailedRoomInitException();
+                        throw new FailedRoomInitException(ex);
                     }
                 }
             }
