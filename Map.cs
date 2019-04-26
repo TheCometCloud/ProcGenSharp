@@ -7,8 +7,24 @@ using System;
 public class Map
 {
     // Declare needed fields
-    public char?[,] Grid{get; set;}
     protected Random Rng;
+    public char?[,] Grid{get; set;}
+
+    public int Height
+    {
+        get
+        {
+            return Grid.GetLength(0);
+        }
+    }
+
+    public int Width
+    {
+        get
+        {
+            return Grid.GetLength(1);
+        }
+    }
 
     // Parameterized Constructor
     public Map(int height, int width)
@@ -43,14 +59,21 @@ public class Map
     // Traverses a smaller region of the gird, calls innerAction on each point, and outerAction at the end of each row.
     public void SubTraverseWith(int x1, int x2, int y1, int y2, Action<int, int> innerAction, Action<int> outerAction = null)
     {
-        for (int i = y1; i <= y2; i++)
+        try 
         {
-            for (int j = x1; j <= x2; j++)
+            for (int i = y1; i <= y2; i++)
             {
-                innerAction(j, i);
-            }
+                for (int j = x1; j <= x2; j++)
+                {
+                    innerAction(j, i);
+                }
 
-            outerAction(i);
+                outerAction(i);
+            }
+        }
+        catch (IndexOutOfRangeException ex)
+        {
+            throw ex;
         }
     }
 
