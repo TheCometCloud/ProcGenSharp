@@ -1,3 +1,5 @@
+// Houston Tyler Webb
+// 
 // Child class of Room for rectangular rooms.
 using System;
 using System.Collections.Generic;
@@ -6,6 +8,7 @@ namespace ProcGenSharp
 {
     public class BoxRoom : Room
     {
+        // Room Data Fields
         public int Height {get; private set;}
         public int Width {get; private set;}
         public Tile TopLeft {get; private set;}
@@ -36,7 +39,7 @@ namespace ProcGenSharp
                 {
                     try
                     {
-                        Points.Add(new Tile(j, i, ParentMap.Grid[i, j]));
+                        Points.Add(new Tile(j, i, ParentMap));
                     }
                     catch (IndexOutOfRangeException ex)
                     {
@@ -52,11 +55,11 @@ namespace ProcGenSharp
             List<Tile> perimeterPoints = new List<Tile>();
         
             // Add tile to the perimeter if one of its dimensions are part of the edge.-
-            TraverseWith( (x, y) =>
+            TraverseWith( (tile) =>
             {
-                if (x == TopLeft.x || y == TopLeft.y|| x == TopLeft.x + Width - 1 || y == TopLeft.y + Height - 1)
+                if (tile.x == TopLeft.x || tile.y == TopLeft.y|| tile.x == TopLeft.x + Width - 1 || tile.y == TopLeft.y + Height - 1)
                 {
-                    perimeterPoints.Add(new Tile(x, y, ParentMap.Grid[y, x]));
+                    perimeterPoints.Add(tile);
                 }
             });
         

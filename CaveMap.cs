@@ -18,7 +18,7 @@ namespace ProcGenSharp
             DevelopGrid = new char?[height + 2, width + 2];
 
             // Randomly fill the grid with walls and empty spaces
-            TraverseWith((x, y) => {Grid[y, x] = Rng.Next() % 2 == 0 ? Empty : Wall;});
+            TraverseWith((tile) => {tile.character = Rng.Next() % 2 == 0 ? Empty : Wall;});
 
             // Iterate with the cellular automata pattern 4 times.
             for (int i = 0; i < 4; i++)
@@ -27,7 +27,7 @@ namespace ProcGenSharp
                 TraverseWith(PrimeDevelop);
 
                 // Transfer the Development Grid to the Actual Grid
-                TraverseWith((x, y) => {Grid[y, x] = DevelopGrid[y, x];});
+                TraverseWith((tile) => {Grid[tile.y, tile.x] = DevelopGrid[tile.y, tile.x];});
             }
 
             // Close off the edges of the map
@@ -35,18 +35,18 @@ namespace ProcGenSharp
         }
 
         // Develops a point via the cellular automata pattern
-        private void PrimeDevelop(int x, int y)
+        private void PrimeDevelop(Tile tile)
         {
             // Count the number of walls surrounding (and including) the point
             int wallCount = 0;
-            for (int i = y - 1; i < y + 1; i++)
+            for (int i = tile.y - 1; i < tile.y + 1; i++)
             {
-                for (int j = x - 1; j < x + 1; j++)
+                for (int j = tile.x - 1; j < tile.x + 1; j++)
                     wallCount += (Grid[i,j] == Wall || Grid[i,j] == null ? 1 : 0);
             }
 
             // If there are many walls or very few walls, become a wall.
-            DevelopGrid[y, x] = wallCount > 4 || wallCount <= 2 ? Wall : Empty;
+            DevelopGrid[tile.y, tile.x] = wallCount > 4 || wallCount <= 2 ? Wall : Empty;
         }
     }
 }

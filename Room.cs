@@ -3,6 +3,7 @@
 // A base class for mananing a set of Points in a ProcGen Map.
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProcGenSharp
 {
@@ -30,11 +31,11 @@ namespace ProcGenSharp
         }
 
         // Move through every point in the room, performing this action.
-        public void TraverseWith(Action<int, int> action)
+        public void TraverseWith(Action<Tile> action)
         {
-            foreach(Tile point in Points)
+            foreach(Tile tile in Points)
             {
-                action(point.x, point.y);
+                action(tile);
             }
         }
 
@@ -57,15 +58,15 @@ namespace ProcGenSharp
             List<Tile> perimeterPoints = new List<Tile>();
 
             // Loop through all neighbors of the point
-            TraverseWith( (x, y) =>
+            TraverseWith( (tile) =>
             {
-                for (int i = y - 1; i < y + 2; i++)
+                for (int i = tile.y - 1; i < tile.y + 2; i++)
                 {
-                    for(int j = x - 1; j < x + 2; j++)
+                    for(int j = tile.x - 1; j < tile.x + 2; j++)
                     {
-                        if (!Points.Contains(new Tile(j, i, ParentMap.Grid[i, j])))
+                        if (!Points.Contains(new Tile(j, i, ParentMap)))
                         {
-                            perimeterPoints.Add(new Tile(x, y, ParentMap.Grid[y, x]));
+                            perimeterPoints.Add(tile);
                             break;
                         }
                     }
@@ -75,38 +76,25 @@ namespace ProcGenSharp
             return perimeterPoints;
         }
 
+        public void Fill(char c)
+        {
+            Points = Points.Select(tile => {tile.character = c; return tile;}).ToList();
+        }
+
         // Draws the room to the parent grid.
         public void DrawToParentGrid()
         {
-            // Can't draw to parent map if it doesn't exist
-            if (ParentMap == null)
-                return;
-
             List<Tile> perimeter = GetPerimeter();
             List<Tile> drawList = new List<Tile>();
 
-            // Assign characters and add them to the drawlist.
-            TraverseWith( (x, y) =>
+            // Assign characters
+            TraverseWith( (tile) =>
             {
-                Tile temp = new Tile(x, y);
-
-                if (perimeter.Contains(temp))
-                {
-                    temp.value = Wall;
-                }
+                if (perimeter.Contains(tile))
+                    tile.character = '#';
                 else
-                {
-                    temp.value = Floor;
-                }
-
-                drawList.Add(temp);
+                    tile.character = '.';
             });
-
-            // Make respective changes to the grid
-            foreach (Tile tile in drawList)
-            {
-                ParentMap.Grid[tile.y, tile.x] = tile.value;
-            }
         }
     }
 }

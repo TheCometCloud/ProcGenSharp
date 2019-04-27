@@ -16,14 +16,17 @@ namespace ProcGenSharp
         {
             Rooms = new List<Room>();
             FillGrid('.');
-            TraverseWith( (x, y) =>
+            TraverseWith( (tile) =>
             {
+                // 1% chance to generate a room at a location.
                 if (Rng.Next() % 100 == 0)
                 {
+                    // Try to create a room and throw it away if its out of bounds or intersects another room.
                     Room newRoom;
+
                     try
                     {
-                        newRoom = new BoxRoom(this, Rng.Next(10) + 1, Rng.Next(10) + 1, new Tile(x, y, Grid[y, x]));
+                        newRoom = new BoxRoom(this, Rng.Next(10) + 1, Rng.Next(10) + 1, tile);
                     }
                     catch(BoxRoom.FailedRoomInitException ex)
                     {
@@ -41,6 +44,7 @@ namespace ProcGenSharp
                 }
             });
 
+            // Draw each room.
             foreach (Room room in Rooms)
             {
                 room.DrawToParentGrid();
