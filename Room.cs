@@ -13,6 +13,7 @@ namespace ProcGenSharp
         public List<Tile> Points;
         public Map ParentMap;
 
+        // Default Characters
         public char Wall = '#';
         public char Floor = '.';
 

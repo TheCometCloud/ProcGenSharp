@@ -33,6 +33,7 @@ namespace ProcGenSharp
             this.Width = width;
             this.TopLeft = topLeft;
 
+            // Add each Tile in the box to the Points list
             for (int i = topLeft.y; i < topLeft.y + Height; i++)
             {
                 for (int j = topLeft.x; j < topLeft.x + Width; j++)
