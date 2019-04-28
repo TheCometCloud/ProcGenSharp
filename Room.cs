@@ -76,6 +76,7 @@ namespace ProcGenSharp
             return perimeterPoints;
         }
 
+        // Set each point in a room to this character
         public void Fill(char c)
         {
             Points = Points.Select(tile => {tile.character = c; return tile;}).ToList();

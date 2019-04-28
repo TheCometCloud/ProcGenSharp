@@ -47,14 +47,11 @@ namespace ProcGenSharp
         // Fills the borders of the map with walls
         public void WallGrid()
         {
-            for (int i = 1; i < Height - 1; i++)
+            TraverseWith( (tile) =>
             {
-                for (int j = 1; j < Width - 1; j++)
-                {
-                    if (i == 1 || j == 1 || i == Height - 2|| j == Width - 2)
-                        Grid[j, i] = Wall;
-                }
-            }
+                if (tile.x == 1 || tile.y == 1 || tile.x == Width - 2 || tile.y == Height - 2)
+                    tile.character = Wall;
+            });
         }
 
         // Loops through the grid, calls innerAction on each point, and outerAction at the end of each row. 
