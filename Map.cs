@@ -19,7 +19,7 @@ namespace ProcGenSharp
 
         // Default representers
         public char Unknown = '?';
-        public char Empty = '.';
+        public char Empty = ' ';
         public char Wall = '#';
 
         // Dimension getters
@@ -89,6 +89,19 @@ namespace ProcGenSharp
             }
         }
 
+        public void TraverseNeighborsWith(Tile target, Action<Tile> action, int range = 1)
+        {
+    
+            for (int i = target.y - range; i <= target.y + range; i++)
+            {
+                for (int j = target.x - range; j <= target.x + range; j++)
+                {
+                    if (j < Width && i < Height)
+                        action(new Tile(j, i, this));
+                }
+            }
+        }
+
         // Tile based subtraversal.
         public void SubTraverseWith(Tile topLeft, Tile bottomRight, Action<Tile> innerAction, Action<int> outerAction = null)
         {
@@ -108,7 +121,8 @@ namespace ProcGenSharp
                     Rooms.Add(new Room(Flood(target), this));
                 }
             });
-
+            
+            FloodVerifier = new List<Tile>();
             return Rooms;
         }
 

@@ -15,8 +15,8 @@ namespace ProcGenSharp
         // Retrieves and updates from the parental Map object.
         public char? character 
         {
-            get {return Map.Grid[y, x];} 
-            set {Map.Grid[y, x] = value;}
+            get { return Map.Grid[y, x]; } 
+            set { Map.Grid[y, x] = value; }
         }
 
         // Parameterized Constructor
