@@ -89,9 +89,9 @@ namespace ProcGenSharp
             }
         }
 
+        // Loop through all neighbors of a Tile
         public void TraverseNeighborsWith(Tile target, Action<Tile> action, int range = 1)
         {
-    
             for (int i = target.y - range; i <= target.y + range; i++)
             {
                 for (int j = target.x - range; j <= target.x + range; j++)
@@ -113,6 +113,7 @@ namespace ProcGenSharp
         {
             List<Room> Rooms = new List<Room>();
 
+            // Flood unflooded and empty tiles
             TraverseWith( (target) => 
             {
                 if (target.character == Empty && !FloodVerifier.Contains(target))
@@ -148,10 +149,9 @@ namespace ProcGenSharp
                 }
             }
 
+            // If no eligible neighbors are found, return null 
             if (EmptyNeighbors.Count == 0)
-            {
                 return null;
-            }
 
             // Recurse for each neighbor
             List<Tile> output = new List<Tile>();

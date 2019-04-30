@@ -23,6 +23,7 @@ namespace ProcGenSharp
             Excavate();
         }
 
+        // Create the cave
         public virtual void Excavate()
         {
             // Iterate with the cellular automata pattern 4 times.
