@@ -15,13 +15,15 @@ namespace ProcGenSharp
         public BoxPipeMap(int height, int width) : base(height, width)
         {
             Rooms = new List<Room>();
-            FillGrid('.');
+            FillGrid(Empty);
+
             TraverseWith( (tile) =>
             {
                 // 1% chance to generate a room at a location.
                 if (Rng.Next() % 100 == 0)
                 {
                     // Try to create a room and throw it away if its out of bounds or intersects another room.
+
                     Room newRoom;
 
                     try
@@ -30,7 +32,6 @@ namespace ProcGenSharp
                     }
                     catch(BoxRoom.FailedRoomInitException ex)
                     {
-                        Console.WriteLine(ex.StackTrace);
                         return;
                     }
 
@@ -40,6 +41,7 @@ namespace ProcGenSharp
                             return;
                     }
 
+                    // Add the room if it survives the trials
                     Rooms.Add(newRoom);
                 }
             });
@@ -49,6 +51,9 @@ namespace ProcGenSharp
             {
                 room.DrawToParentGrid();
             }
+
+            // Border the grid.
+            WallGrid();
         }
     }   
 }

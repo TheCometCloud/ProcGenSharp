@@ -1,3 +1,7 @@
+// Houston Tyler Webb
+//
+// This is a child class of CaveMap that creates a more elongated
+// cave structure in the Grid.
 using System.Collections.Generic;
 using System;
 

@@ -38,14 +38,11 @@ namespace ProcGenSharp
             {
                 for (int j = topLeft.x; j < topLeft.x + Width; j++)
                 {
-                    try
-                    {
-                        Points.Add(new Tile(j, i, ParentMap));
-                    }
-                    catch (IndexOutOfRangeException ex)
-                    {
-                        throw new FailedRoomInitException(ex);
-                    }
+                    Tile tile = new Tile(j, i, ParentMap);
+                    if (!tile.IsOutOfBounds())
+                        Points.Add(tile);
+                    else
+                        throw new FailedRoomInitException(new IndexOutOfRangeException());
                 }
             }
         }

@@ -15,7 +15,7 @@ namespace ProcGenSharp
         public CaveMap(int height, int width) : base(height, width)
         {
             // Initialize development grid
-            DevelopGrid = new char?[height + 2, width + 2];
+            DevelopGrid = new char?[height, width];
 
             // Randomly fill the grid with walls and empty spaces
             TraverseWith((tile) => {tile.character = Rng.Next(100) < 40 ? Wall : Empty;});
@@ -56,20 +56,23 @@ namespace ProcGenSharp
             // Count the number of walls in close range.
             TraverseNeighborsWith(tile, (neighbor) =>
             {
-                closeCount += (Grid[neighbor.y, neighbor.x] == Wall || Grid[neighbor.y, neighbor.x] == null ? 1 : 0);
+                if (neighbor.IsOutOfBounds())
+                    closeCount++;
+                else
+                    closeCount += (Grid[neighbor.y, neighbor.x] == Wall ? 1 : 0);
             });
 
             // Count the number of walls within 2 spaces.
             TraverseNeighborsWith(tile, (neighbor) =>
             {
-                if (neighbor.y >= Grid.GetLength(0) || neighbor.x >= Grid.GetLength(1) || neighbor.x < 0 || neighbor.y < 0)
+                if (neighbor.IsOutOfBounds())
                     farCount++;
                 else if ((neighbor.x == tile.x - 2 || neighbor.x == tile.x + 2) && (neighbor.y == tile.y - 2 || neighbor.y == tile.y + 2))
                 {
                     // Do nothing
                 }
                 else
-                    farCount += (Grid[neighbor.y, neighbor.x] == Wall || Grid[neighbor.y, neighbor.x] == null ? 1 : 0);
+                    farCount += (Grid[neighbor.y, neighbor.x] == Wall ? 1 : 0);
             }, 2);
 
             // If there are many walls or very few walls, become a wall.
@@ -83,7 +86,10 @@ namespace ProcGenSharp
             int wallCount = 0;
             TraverseNeighborsWith(tile, (neighbor) =>
             {
-                wallCount += (Grid[neighbor.y, neighbor.x] == Wall || Grid[neighbor.y, neighbor.x] == null ? 1 : 0);
+                if(neighbor.IsOutOfBounds())
+                    wallCount++;
+                else
+                    wallCount += (Grid[neighbor.y, neighbor.x] == Wall ? 1 : 0);
             }, 1);
 
             // If there are many walls or very few walls, become a wall.

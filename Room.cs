@@ -13,10 +13,6 @@ namespace ProcGenSharp
         public List<Tile> Points;
         public Map ParentMap;
 
-        // Default Characters
-        public char Wall = '#';
-        public char Floor = '.';
-
         // No-Arg Constructor
         public Room()
         {
@@ -93,9 +89,9 @@ namespace ProcGenSharp
             TraverseWith( (tile) =>
             {
                 if (perimeter.Contains(tile))
-                    tile.character = '#';
+                    tile.character = ParentMap.Wall;
                 else
-                    tile.character = '.';
+                    tile.character = ParentMap.Empty;
             });
         }
     }

@@ -1,7 +1,8 @@
 // Houston Tyler Webb
 //
-// A Tile type for storing point information on grids.
+// A Tile type for storing cell information on grids.
 using System;
+using System.Collections.Generic;
 
 namespace ProcGenSharp
 {
@@ -25,6 +26,12 @@ namespace ProcGenSharp
             this.x = x;
             this.y = y;
             this.Map = map;
+        }
+
+        // Out of bounds verifier
+        public bool IsOutOfBounds()
+        {
+            return (x < 0 || y < 0 || x >= Map.Width || y >= Map.Height);
         }
 
         // Equivalence Methods

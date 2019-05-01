@@ -30,7 +30,7 @@ namespace ProcGenSharp
         public Map(int height, int width)
         {
             // Initialize the grid with breathing room
-            Grid = new char?[height + 2, width + 2];
+            Grid = new char?[height, width];
             Rng = new Random();
             FloodVerifier = new List<Tile>();
 
@@ -49,7 +49,7 @@ namespace ProcGenSharp
         {
             TraverseWith( (tile) =>
             {
-                if (tile.x == 1 || tile.y == 1 || tile.x == Width - 2 || tile.y == Height - 2)
+                if (tile.x == 0 || tile.y == 0 || tile.x == Width - 1 || tile.y == Height - 1)
                     tile.character = Wall;
             });
         }
@@ -57,9 +57,9 @@ namespace ProcGenSharp
         // Loops through the grid, calls innerAction on each point, and outerAction at the end of each row. 
         public void TraverseWith(Action<Tile> innerAction, Action<int> outerAction = null)
         {
-            for (int i = 1; i < Height -1; i++)
+            for (int i = 0; i < Height; i++)
             {
-                for (int j = 1; j < Width - 1; j++)
+                for (int j = 0; j < Width; j++)
                     innerAction(new Tile(j, i, this));
 
                 if (outerAction != null)
@@ -96,8 +96,7 @@ namespace ProcGenSharp
             {
                 for (int j = target.x - range; j <= target.x + range; j++)
                 {
-                    if (j < Width && i < Height)
-                        action(new Tile(j, i, this));
+                    action(new Tile(j, i, this));
                 }
             }
         }
@@ -141,10 +140,8 @@ namespace ProcGenSharp
                     {
                         Tile test = new Tile(tile.x + x, tile.y + y, this);
 
-                        if (test.character == Empty && !FloodVerifier.Contains(test))
-                        {
+                        if (!test.IsOutOfBounds() && test.character == Empty && !FloodVerifier.Contains(test))
                             EmptyNeighbors.Add(test);
-                        }
                     }
                 }
             }
