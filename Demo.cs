@@ -25,5 +25,9 @@ class Demo
 
         var pipeRooms = boxPipe.GetFloodRooms();
         Console.WriteLine($"There are {pipeRooms.Count} rooms.");
+
+        MazeMap mazeMap = new MazeMap(25, 70);
+        Console.WriteLine("A Maze Map:");
+        Console.WriteLine(mazeMap);
     }
 }
