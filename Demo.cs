@@ -19,7 +19,7 @@ class Demo
         var guidedRooms = guidedCaveMap.GetFloodRooms();
         Console.WriteLine($"There are {guidedRooms.Count} rooms.");
 
-        BoxPipeMap boxPipe = new BoxPipeMap(25, 70);
+        BoxPipeMap boxPipe = new BoxPipeMap(50, 70, 5, 10, -10);
         Console.WriteLine("A Box-Pipe Map:");
         Console.WriteLine(boxPipe);
 

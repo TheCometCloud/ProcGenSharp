@@ -13,6 +13,9 @@ namespace ProcGenSharp
         public List<Tile> Points;
         public Map ParentMap;
 
+        // Special room characters
+        public char Floor = '.';
+
         // No-Arg Constructor
         public Room()
         {
@@ -37,12 +40,19 @@ namespace ProcGenSharp
         }
 
         // Checks if two rooms intersect at any point.
-        public bool CollidesWith(Room other)
+        public bool CollidesWith(Room other, bool shareWalls = false)
         {
             foreach(Tile point in Points)
             {
                 if (other.Points.Contains(point))
-                    return true;
+                {
+                    if (other.GetPerimeter().Contains(point) && this.GetPerimeter().Contains(point) && shareWalls)
+                    {
+                        continue;
+                    }
+                    else
+                        return true;
+                }
             }
 
             return false;
@@ -55,7 +65,7 @@ namespace ProcGenSharp
             List<Tile> perimeterPoints = new List<Tile>();
 
             // Loop through all neighbors of the point
-            TraverseWith( (tile) =>
+            TraverseWith( tile =>
             {
                 for (int i = tile.y - 1; i < tile.y + 2; i++)
                 {
@@ -91,7 +101,7 @@ namespace ProcGenSharp
                 if (perimeter.Contains(tile))
                     tile.character = ParentMap.Wall;
                 else
-                    tile.character = ParentMap.Empty;
+                    tile.character = Floor;
             });
         }
     }
