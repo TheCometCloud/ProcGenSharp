@@ -10,6 +10,7 @@ namespace ProcGenSharp
     public class BoxPipeMap : MazeMap
     {
         List<Room> Rooms;
+        List<Tile> Doors;
         public char Door = 'D';
 
         int MinDim;
@@ -22,11 +23,12 @@ namespace ProcGenSharp
             this.MaxDim = MaxDim;
 
             Rooms = new List<Room>();
+            Doors = new List<Tile>();
             FillGrid(Unknown);
 
             TraverseWith( (tile) =>
             {
-                // 1% chance to generate a room at a location.
+                // 2% chance to generate a room at a location.
                 if (Rng.Next(50) == 0)
                 {
                     // Try to create a room and throw it away if its out of bounds or intersects another room.
@@ -95,25 +97,35 @@ namespace ProcGenSharp
 
                 if (candidates.Count == 0)
                     continue;
+
                 // Add a door.
                 var candidate = candidates[Rng.Next(candidates.Count)];
                 candidate.character = Door;
                 candidates.Remove(candidate);
+                Doors.Add(candidate);
                 
                 // Small chance to add another door
-                if (Rng.Next(10) == 0)
+                if (Rng.Next(3) == 0 && candidates.Count > 0)
                 {
                     bool found = false;
+                    Tile newCandidate;
                     do
                     {
-                        var newCandidate = candidates[Rng.Next(candidates.Count)];
-                        if (!newCandidate.GetNeighbors(false).Contains(candidate))
+                        found = true;
+                        newCandidate = candidates[Rng.Next(candidates.Count)];
+                        foreach(Tile door in Doors)
                         {
-                            found = true;
-                            candidates.Remove(newCandidate);
-                            newCandidate.character = Door;
+                            if (newCandidate.GetNeighbors(false).Contains(door))
+                            {
+                                found = false;
+                            }
                         }
+
                     } while(!found);
+
+                    candidates.Remove(newCandidate);
+                    Doors.Add(newCandidate);
+                    newCandidate.character = Door;
                 }
 
             }
