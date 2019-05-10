@@ -3,6 +3,7 @@
 // This is an algorithm for producing a series of rooms connected by
 // Long pipes across the map.
 using System;
+
 using System.Collections.Generic;
 
 namespace ProcGenSharp
@@ -16,11 +17,15 @@ namespace ProcGenSharp
         int MinDim;
         int MaxDim;
 
+        int MaxDeadEnds;
+
         // Parameterized Constructor
-        public BoxPipeMap(int height, int width, int MinDim = 3, int MaxDim = 10, float BranchRate = 0) : base(height, width, BranchRate)
+        public BoxPipeMap(int height, int width, int MinDim = 3, int MaxDim = 10, float BranchRate = 0, int MaxDeadEnds = 0) : base(height, width, BranchRate)
         {
             this.MinDim = MinDim;
             this.MaxDim = MaxDim;
+
+            this.MaxDeadEnds = MaxDeadEnds;
 
             Rooms = new List<Room>();
             Doors = new List<Tile>();
@@ -60,74 +65,69 @@ namespace ProcGenSharp
             }
 
             WallGrid();
-            InitializeMaze();
+            TraverseWith( tile =>
+            {
+                if (tile.character == Unknown)
+                    InitializeMaze(tile);
+            });
             MakeDoorways();
             CleanDeadEnds();
+        }
+
+        // Retrieves a list a possible openings
+        public List<Tile> GetPotentialDoorways(Room room)
+        {
+            List<Tile> tiles = room.Points;
+            List<Tile> doorways = new List<Tile>();
+
+            foreach(Tile tile in tiles)
+            {
+                for(int i = -1; i < 2; i++)
+                {
+                    for (int j = -1; j < 2; j++)
+                    {
+                        Tile neighbor = new Tile(tile.x + j, tile.y + i, tile.Map);
+
+                        if (neighbor.IsOutOfBounds())
+                            continue;
+
+                        if (i == 0 && j == 0)
+                            continue;
+
+                        if (i != 0 && j != 0)
+                            continue;
+
+                        if (tile.character == Empty && neighbor.character == Wall)
+                        {
+                            Tile checkTile = new Tile(tile.x + j * 2, tile.y + i * 2, tile.Map);
+                            if (!checkTile.IsOutOfBounds() && checkTile.character == Empty && !room.Points.Contains(checkTile))
+                                doorways.Add(neighbor);
+                        }
+                    }
+                }
+            }
+
+            return doorways;
         }
 
         // Make at least on door to each room.
         public void MakeDoorways()
         {
-            foreach (Room room in Rooms)
+            List<Room> rooms = GetFloodRooms();
+         
+            while(rooms.Count > 1)
             {
-                var walls = room.GetPerimeter();
-                var candidates = new List<Tile>();
-
-                foreach(Tile wall in walls)
+                Room workingRoom = rooms[Rng.Next(rooms.Count)];
+                var tiles = GetPotentialDoorways(workingRoom);
+                if (tiles.Count < 1)
+                    break;
+                else
                 {
-                    bool floorFound = false;
-                    bool emptyFound = false;
-
-                    foreach(Tile neighbor in wall.GetNeighbors(false))
-                    {
-                        if (!neighbor.IsOutOfBounds() && neighbor.character == room.Floor)
-                        {
-                            if (floorFound)
-                                emptyFound = true;
-
-                            floorFound = true;
-                        }
-                        else if (!neighbor.IsOutOfBounds() && neighbor.character == Empty)
-                            emptyFound = true;
-                    }
-
-                    if (floorFound && emptyFound)
-                        candidates.Add(wall);
+                    tiles[Rng.Next(tiles.Count)].character = Empty;
+                    if (Rng.Next(100) < 50)
+                        tiles[Rng.Next(tiles.Count)].character = Empty;
                 }
-
-                if (candidates.Count == 0)
-                    continue;
-
-                // Add a door.
-                var candidate = candidates[Rng.Next(candidates.Count)];
-                candidate.character = Door;
-                candidates.Remove(candidate);
-                Doors.Add(candidate);
-                
-                // Small chance to add another door
-                if (Rng.Next(3) == 0 && candidates.Count > 0)
-                {
-                    bool found = false;
-                    Tile newCandidate;
-                    do
-                    {
-                        found = true;
-                        newCandidate = candidates[Rng.Next(candidates.Count)];
-                        foreach(Tile door in Doors)
-                        {
-                            if (newCandidate.GetNeighbors(false).Contains(door))
-                            {
-                                found = false;
-                            }
-                        }
-
-                    } while(!found);
-
-                    candidates.Remove(newCandidate);
-                    Doors.Add(newCandidate);
-                    newCandidate.character = Door;
-                }
-
+                rooms = GetFloodRooms();
             }
         }
         
@@ -163,7 +163,7 @@ namespace ProcGenSharp
                         tile.character = Wall;
                     }
                 });
-            } while (deadEndsFound > 0); // Repeat until we've got them all.
+            } while (deadEndsFound > MaxDeadEnds); // Repeat until we've got them all.
         }
     }   
 }

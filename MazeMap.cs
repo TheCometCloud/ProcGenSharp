@@ -11,7 +11,7 @@ namespace ProcGenSharp
         // Development Fields
         char Processing = 'P';
         List<Tile> Frontier = new List<Tile>();
-        float BranchRate = 0;
+        protected float BranchRate = 0;
 
         // Markers for which edge a tile is on respective to another tile
         [Flags]
@@ -33,14 +33,30 @@ namespace ProcGenSharp
             // Generate the Maze
             FillGrid(Unknown);
             WallGrid();
-            InitializeMaze();
+            TraverseWith( tile =>
+            {
+                if (tile.character == Unknown)
+                    InitializeMaze(tile);
+            });
+
+            // Set the remaining, unexposed cells to walls
+            TraverseWith( (tile) =>
+            {
+                bool emptyFound = false;
+                foreach(Tile neighbor in tile.GetNeighbors(false))
+                {
+                    if (!neighbor.IsOutOfBounds() && neighbor.character == Empty)
+                        emptyFound = true;
+                }
+
+                if (!emptyFound)
+                    tile.character = Wall;
+            });
         }
 
         // Create the Maze
-        public void InitializeMaze()
+        public void InitializeMaze(Tile start)
         {
-            Tile start;
-
             // Start at a random, unknown tile
             do
                 start = new Tile(Rng.Next(Width), Rng.Next(Height), this);
@@ -63,13 +79,6 @@ namespace ProcGenSharp
 
                 Frontier.Remove(choice);
             }
-            
-            // Set the remaining, unexposed cells to walls
-            TraverseWith( (tile) =>
-            {
-                if (tile.character == Unknown)
-                    tile.character = Wall;
-            });
         }
 
         // Empties a tile and adds its neighbors to the Frontier

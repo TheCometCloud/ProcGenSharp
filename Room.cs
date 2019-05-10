@@ -14,7 +14,7 @@ namespace ProcGenSharp
         public Map ParentMap;
 
         // Special room characters
-        public char Floor = '.';
+        public char Floor = ' ';
 
         // No-Arg Constructor
         public Room()
@@ -28,15 +28,15 @@ namespace ProcGenSharp
         {
             this.Points = Points;
             this.ParentMap = ParentMap;
+            this.Floor = ParentMap.Empty;
         }
 
         // Move through every point in the room, performing this action.
         public void TraverseWith(Action<Tile> action)
         {
             foreach(Tile tile in Points)
-            {
                 action(tile);
-            }
+
         }
 
         // Checks if two rooms intersect at any point.
@@ -47,9 +47,7 @@ namespace ProcGenSharp
                 if (other.Points.Contains(point))
                 {
                     if (other.GetPerimeter().Contains(point) && this.GetPerimeter().Contains(point) && shareWalls)
-                    {
                         continue;
-                    }
                     else
                         return true;
                 }
@@ -96,7 +94,7 @@ namespace ProcGenSharp
             List<Tile> drawList = new List<Tile>();
 
             // Assign characters
-            TraverseWith( (tile) =>
+            TraverseWith( tile =>
             {
                 if (perimeter.Contains(tile))
                     tile.character = ParentMap.Wall;

@@ -141,14 +141,16 @@ namespace ProcGenSharp
                         Tile test = new Tile(tile.x + x, tile.y + y, this);
 
                         if (!test.IsOutOfBounds() && test.character == Empty && !FloodVerifier.Contains(test))
+                        {
                             EmptyNeighbors.Add(test);
+                        }
                     }
                 }
             }
 
-            // If no eligible neighbors are found, return null 
+            // If no eligible neighbors are found, return this tile 
             if (EmptyNeighbors.Count == 0)
-                return null;
+                return new List<Tile>(){tile};
 
             // Recurse for each neighbor
             List<Tile> output = new List<Tile>();
@@ -156,8 +158,7 @@ namespace ProcGenSharp
             {
                 FloodVerifier.Add(neighbor);
                 List<Tile> descendents = Flood(neighbor);
-                if (descendents != null)
-                    output = output.Union(descendents).ToList();
+                output = output.Union(descendents).ToList();
             }
 
             return output;
