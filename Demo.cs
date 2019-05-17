@@ -61,7 +61,6 @@ class Demo
             if (tile.character != 'X')
                 tile.character = '.';
         }
-        
         Console.WriteLine(mazeMap);
     }
 }

@@ -67,12 +67,10 @@ namespace ProcGenSharp
             {
                 if (neighbor.IsOutOfBounds())
                     farCount++;
-                else if ((neighbor.x == tile.x - 2 || neighbor.x == tile.x + 2) && (neighbor.y == tile.y - 2 || neighbor.y == tile.y + 2))
+                else if (!((neighbor.x == tile.x - 2 || neighbor.x == tile.x + 2) && (neighbor.y == tile.y - 2 || neighbor.y == tile.y + 2)))
                 {
-                    // Do nothing
-                }
-                else
                     farCount += (Grid[neighbor.y, neighbor.x] == Wall ? 1 : 0);
+                }
             }, 2);
 
             // If there are many walls or very few walls, become a wall.

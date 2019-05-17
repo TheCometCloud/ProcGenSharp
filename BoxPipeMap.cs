@@ -11,8 +11,6 @@ namespace ProcGenSharp
     public class BoxPipeMap : MazeMap
     {
         List<Room> Rooms;
-        List<Tile> Doors;
-        public char Door = 'D';
 
         int MinDim;
         int MaxDim;
@@ -28,7 +26,6 @@ namespace ProcGenSharp
             this.MaxDeadEnds = MaxDeadEnds;
 
             Rooms = new List<Room>();
-            Doors = new List<Tile>();
             FillGrid(Unknown);
 
             TraverseWith( (tile) =>
@@ -120,11 +117,13 @@ namespace ProcGenSharp
                 Room workingRoom = rooms[Rng.Next(rooms.Count)];
                 var tiles = GetPotentialDoorways(workingRoom);
                 if (tiles.Count < 1)
-                    break;
+                {
+                    continue;
+                }
                 else
                 {
                     tiles[Rng.Next(tiles.Count)].character = Empty;
-                    if (Rng.Next(100) < 50)
+                    if (Rng.Next(100) < 75)
                         tiles[Rng.Next(tiles.Count)].character = Empty;
                 }
                 rooms = GetFloodRooms();
