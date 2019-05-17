@@ -48,7 +48,7 @@ namespace ProcGenSharp
         }
         
         // Neighbor acquirer
-        // Tiles are always returned in topright to bottomleft order
+        // Tiles are always returned in topleft to bottomright order
         public List<Tile> GetNeighbors(bool diagonals, int range = 1)
         {
             List<Tile> tiles = new List<Tile>();
@@ -91,12 +91,17 @@ namespace ProcGenSharp
 
         public static bool operator ==(Tile a, Tile b)
         {
-            return (a.x == b.x && a.y == b.y && a.Map == b.Map);
+            if (ReferenceEquals(a, null) != ReferenceEquals(b, null))
+                return false;
+            else if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+                return true;
+            else
+                return (a.x == b.x && a.y == b.y && a.Map == b.Map);
         }
 
         public static bool operator !=(Tile a, Tile b)
         {
-            return (a.x != b.x || a.y != b.y || a.Map != b.Map);
+            return (!(a == b));
         }
 
         public override string ToString()

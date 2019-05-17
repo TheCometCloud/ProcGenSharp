@@ -5,6 +5,8 @@ class Demo
 {
     static void Main(string[] args)
     {   
+        Random rng = new Random();
+
         CaveMap cave = new CaveMap(25, 70);
         Console.WriteLine("A Cave Map:");
         Console.WriteLine(cave);
@@ -26,8 +28,40 @@ class Demo
         var pipeRooms = boxPipe.GetFloodRooms();
         Console.WriteLine($"There are {pipeRooms.Count} rooms.");
 
-        MazeMap mazeMap = new MazeMap(25, 70);
+        MazeMap mazeMap = new MazeMap(25, 70, 5);
         Console.WriteLine("A Maze Map:");
+        Console.WriteLine(mazeMap);
+
+        // Randomly select the starting tile
+        Tile start = null;
+        while(start == null)
+        {
+            Tile test = new Tile(rng.Next(mazeMap.Width), rng.Next(mazeMap.Height), mazeMap);
+            if (!test.IsOutOfBounds() && test.character == mazeMap.Empty)
+                start = test;
+        }
+
+        // Randomly select the ending tile
+        Tile end = null;
+        while(end == null)
+        {
+            Tile test = new Tile(rng.Next(mazeMap.Width), rng.Next(mazeMap.Height), mazeMap);
+            if (!test.IsOutOfBounds() && test.character == mazeMap.Empty && test != start)
+                end = test; 
+        }
+
+        // Create and restructure the maze tree
+        MazeTree tree = new MazeTree(mazeMap, new Tile(1, 1, mazeMap));
+        tree.CenterTree();
+        tree.root.value.character = 'X';
+        
+        // Draw the maze tree
+        foreach(Tile tile in tree.FindPathTo(end))
+        {
+            if (tile.character != 'X')
+                tile.character = '.';
+        }
+        
         Console.WriteLine(mazeMap);
     }
 }
