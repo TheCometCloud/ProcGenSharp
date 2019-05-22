@@ -28,7 +28,7 @@ class Demo
         var pipeRooms = boxPipe.GetFloodRooms();
         Console.WriteLine($"There are {pipeRooms.Count} rooms.");
 
-        MazeMap mazeMap = new MazeMap(25, 70, 5);
+        MazeMap mazeMap = new MazeMap(25, 70, 0);
         Console.WriteLine("A Maze Map:");
         Console.WriteLine(mazeMap);
 
@@ -51,7 +51,7 @@ class Demo
         }
 
         // Create and restructure the maze tree
-        MazeTree tree = new MazeTree(mazeMap, new Tile(1, 1, mazeMap));
+        MazeTree tree = new MazeTree(mazeMap, start);
         tree.CenterTree();
         tree.root.value.character = 'X';
         

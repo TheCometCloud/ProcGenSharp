@@ -3,7 +3,6 @@
 // This is an algorithm for producing a series of rooms connected by
 // Long pipes across the map.
 using System;
-
 using System.Collections.Generic;
 
 namespace ProcGenSharp
